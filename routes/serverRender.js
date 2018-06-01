@@ -11,7 +11,7 @@ let layout = fs.readFileSync('./template/serverRender.html', 'utf8');
 let renderer = require('vue-server-renderer').createRenderer();
 
 const vm = new Vue({
-		template: '<div>耗时{{counter}}</div>',
+		template: '<div @click="addTimer">耗时{{counter}}</div>',
 		data: {
 			counter: 0
 		},
@@ -19,6 +19,12 @@ const vm = new Vue({
 			setInterval(function () {
 				vm.counter++
 			}, 1000)
+		},
+		methods: {
+			addTimer: function () {
+				vm.counter++
+				console.log('耗时...')
+			}
 		}
 	})
 
