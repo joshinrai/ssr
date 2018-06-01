@@ -48,7 +48,6 @@ router.get('/rendIndex', function(req, res, next) {
 		// 流模式呈现vue实例
 		// const stream = renderer.renderToSTream(vm);
 
-
 		res.send(layout.replace('<div class="myapp"></div>', ul));
 	})
 });
