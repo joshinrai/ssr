@@ -8,14 +8,19 @@ const Vue = require('vue');
 global.vue = Vue
 
 let layout = fs.readFileSync('./template/serverRender.html', 'utf8');
-console.log('layout is:', layout)
 let renderer = require('vue-server-renderer').createRenderer();
 
 const vm = new Vue({
-	render (h) {
-		return h('div', 'hello')
-	}
-})
+		template: '<div>耗时{{counter}}</div>',
+		data: {
+			counter: 0
+		},
+		created: function () {
+			setInterval(function () {
+				vm.counter++
+			}, 1000)
+		}
+	})
 
 //创建连接
 let connection = mysql.createConnection({
@@ -29,6 +34,8 @@ let connection = mysql.createConnection({
 connection.connect();
 
 let sql = 'SELECT nickName FROM tb_user'
+
+
 
 /* GET users listing. */
 router.get('/rendIndex', function(req, res, next) {
@@ -44,11 +51,12 @@ router.get('/rendIndex', function(req, res, next) {
 		// 将vue实例呈现为字符串
 		renderer.renderToString(vm, function (error, html) {
 			console.log('vue server render html is:', JSON.stringify(html))
+			res.send(layout.replace('<div class="myapp"></div>', html));
 		})
 		// 流模式呈现vue实例
 		// const stream = renderer.renderToSTream(vm);
 
-		res.send(layout.replace('<div class="myapp"></div>', ul));
+		// res.send(layout.replace('<div class="myapp"></div>', ul));
 	})
 });
 
