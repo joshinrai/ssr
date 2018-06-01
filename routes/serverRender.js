@@ -2,11 +2,19 @@ let express = require('express');
 let router = express.Router();
 
 let fs = require('fs');
+let path = require('path');
 let mysql = require('mysql');
-global.vue = require('vue');
+const Vue = require('vue');
+global.vue = Vue
 
 let layout = fs.readFileSync('./template/serverRender.html', 'utf8');
 let renderer = require('vue-server-renderer').createRenderer();
+
+const vm = new Vue({
+	render (h) {
+		return h('div', 'hello')
+	}
+})
 
 //创建连接
 let connection = mysql.createConnection({
@@ -24,7 +32,6 @@ let sql = 'SELECT nickName FROM tb_user'
 /* GET users listing. */
 router.get('/rendIndex', function(req, res, next) {
 	connection.query(sql, function (err, result) {
-		console.log('err is:', err)
 		let nameList = JSON.parse(JSON.stringify(result))
 		let list = []
 		for (let i in nameList) {
@@ -51,6 +58,11 @@ router.get('/rendIndex', function(req, res, next) {
 				</script>
 			</body>
 			</html>`
+
+		console.log('router __dirname is:', __dirname)
+		renderer.renderToString(vm, function (error, html) {
+			console.log('vue server render html is:', JSON.stringify(html))
+		})
 		res.send(htmlTemplate);
 		// console.log('result is:', result)
 	})
