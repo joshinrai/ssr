@@ -8,6 +8,7 @@ const Vue = require('vue');
 global.vue = Vue
 
 let layout = fs.readFileSync('./template/serverRender.html', 'utf8');
+console.log('layout is:', layout)
 let renderer = require('vue-server-renderer').createRenderer();
 
 const vm = new Vue({
@@ -39,34 +40,17 @@ router.get('/rendIndex', function(req, res, next) {
 			list.push(`<li>${item.nickName}</li>`)
 		}
 		let ul = `<ul>${list.join('')}</ul>`
-		// <ul>${list.join('')}</ul>
-		let htmlTemplate = `<!DOCTYPE html>
-			<html lang="en">
-			<head>
-				<meta charset="UTF-8">
-				<title>Document</title>
-			</head>
-			<body>
-				render index html ...
-				${ul}
-				<script>
-					document.getElementsByTagName('ul')[0].addEventListener('click', function (event) {
-						if (event.target.nodeName.toUpperCase() === 'LI') {
-							console.log('this is ul ...', event.target.innerText)
-						}
-					})
-				</script>
-			</body>
-			</html>`
 
-		console.log('router __dirname is:', __dirname)
+		// 将vue实例呈现为字符串
 		renderer.renderToString(vm, function (error, html) {
 			console.log('vue server render html is:', JSON.stringify(html))
 		})
-		res.send(htmlTemplate);
-		// console.log('result is:', result)
+		// 流模式呈现vue实例
+		// const stream = renderer.renderToSTream(vm);
+
+
+		res.send(layout.replace('<div class="myapp"></div>', ul));
 	})
-  	// res.send(htmlTemplate);
 });
 
 module.exports = router;

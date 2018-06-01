@@ -7,10 +7,14 @@
 <body>
 	<div class="myapp"></div>
 	<script src="https://vuejs.org/js/vue.js"></script>
-	<script src="/assets/myapp.js" charset="utf-8"></script>
 	<script type="text/javascript">
-		app.$mount('#app')
 		console.log('this is server render html ...')
+
+		document.getElementsByTagName('ul')[0].addEventListener('click', function (event) {
+			if (event.target.nodeName.toUpperCase() === 'LI') {
+				console.log('this is ul ...', event.target.innerText)
+			}
+		})
 	</script>
 </body>
 </html>
