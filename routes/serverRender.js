@@ -41,8 +41,6 @@ connection.connect();
 
 let sql = 'SELECT nickName FROM tb_user'
 
-
-
 /* GET users listing. */
 router.get('/rendIndex', function(req, res, next) {
 	connection.query(sql, function (err, result) {
